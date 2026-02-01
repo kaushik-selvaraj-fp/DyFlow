@@ -44,7 +44,8 @@ MODEL_MAPPING = {
     'qwen3-235B-A22B': 'Qwen/Qwen3-235B-A22B',
     'llama-4-scout': 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
     'qwen3-14B': 'Qwen/Qwen3-14B',
-    'local': ''
+    'local': '',
+    'gemini-2.5-pro': 'gemini-2.5-pro',
 }
 
 # Model categories for client selection
@@ -54,6 +55,7 @@ DEEPINFRA_MODELS = ['llama-3.1-70B', 'llama-3.1-8B', 'qwen-2.5-72B', 'gemma-2-27
 YI_MODELS = ['yi-lightning']
 LOCAL_MODELS = ['local']
 STRUCTURED_OUTPUT_SUPPORT = ['gpt-4o', 'gpt-4o-mini', 'chatgpt-4o-latest']
+GOOGLE_MODELS = ['gemini-2.5-pro']
 
 # Environment variables
 ENV_VARS = {
@@ -81,6 +83,8 @@ def get_model_category(model_name):
         return 'deepinfra'
     elif model_name in YI_MODELS:
         return 'yi'
+    elif model_name in GOOGLE_MODELS:
+        return 'google'
     elif model_name in LOCAL_MODELS:
         return 'local'
     else:

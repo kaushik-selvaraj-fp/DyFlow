@@ -1,6 +1,8 @@
 import os
 import threading
 from typing import Any, ClassVar, Dict, Optional
+import google.auth
+from vertexai.generative_models import GenerativeModel
 
 try:
     from dotenv import load_dotenv  # type: ignore
@@ -70,6 +72,11 @@ class ModelService:
     def gpt4o(cls, temperature: float = 0.01) -> 'ModelService':
         """Create a ModelService instance with GPT-4o"""
         return cls(model='gpt-4o', temperature=temperature)
+
+    @classmethod
+    def google(cls, temperature: float = 0.01) -> 'ModelService':
+        """Create a ModelService instance with Gemini"""
+        return cls(model='gemini-2.5-pro', temperature=temperature)
     
     @classmethod
     def claude(cls, temperature: float = 0.01) -> 'ModelService':
@@ -126,9 +133,14 @@ class ModelService:
                 "usage": {},
                 "price": 0
             }
+        
+        print(f"Generating with model: {self.model} (Category: {self.model_category})")
         # Get response based on model type
         if self.model_category == 'anthropic':
             response, tokens = self.clients.call_anthropic(self.model, prompt, temperature, max_tokens, msg)
+        if self.model_category == 'google':
+            # response, tokens = self.clients.call_google(self.model, prompt, temperature, max_tokens, msg)
+            response, tokens = self.clients.call_google_compatible(self.model, prompt, temperature, self.model_category, msg)
         elif self.model_category == 'local':
             if self.lock:
                 with self.lock:

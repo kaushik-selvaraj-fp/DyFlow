@@ -14,9 +14,12 @@ except ImportError:  # pragma: no cover - optional dependency
     AsyncOpenAI = None  # type: ignore
     OpenAI = None  # type: ignore
 
+# from vertexai.generative_models import GenerativeModel
+# import google.generativeai as genai
+
 from .config import ENV_VARS, MODEL_MAPPING
 from .utils import retry_decorator
-
+from vertexai.generative_models import GenerativeModel, Part, GenerationConfig
 
 class ModelClients:
     """Class for managing different model API clients with lazy loading"""
@@ -32,6 +35,8 @@ class ModelClients:
         self._yi_client = None
         self._async_yi_client = None
         self._local_client = None
+        self._google_client = None
+        self._async_google_client = None
     
     def _init_openai(self):
         """Initialize OpenAI client"""
@@ -143,6 +148,23 @@ class ModelClients:
             self._async_openai_client = self._init_async_openai()
         return self._async_openai_client
     
+
+    @property
+    def google_client(self):
+        """Lazy load Google client"""
+        if self._google_client is None:
+            # self._google_client = GenerativeModel("gemini-2.5-pro")
+            # self._google_client = genai.GenerativeModel("gemini-2.5-pro")
+            self._google_client = GenerativeModel("gemini-2.5-pro")
+        return self._google_client
+
+    @property
+    def async_google_client(self):
+        """Lazy load async Google client"""
+        # if self._async_google_client is None:
+        #     self._async_google_client = self._init_async_google()
+        return self._async_google_client
+
     @property
     def anthropic_client(self):
         """Lazy load Anthropic client"""
@@ -193,7 +215,8 @@ class ModelClients:
             'anthropic': self.anthropic_client,
             'deepinfra': self.deepinfra_client,
             'yi': self.yi_client,
-            'local': self.local_client
+            'local': self.local_client,
+            'google': self.google_client
         }
         
         if model_type not in clients:
@@ -286,6 +309,29 @@ class ModelClients:
         }
         
         return response.choices[0].message.content, tokens
+    
+    @retry_decorator(max_retries=3, delay=1, backoff=2)
+    def call_google_compatible(self, model: str, prompt: str, temperature: float = 0.001, client_type: str = 'google', msg: list = None) -> str:
+        """Call OpenAI-compatible API endpoints"""
+        # print(client_type)
+        client = self.get_client(client_type)
+
+        if msg is None:
+            messages = prompt
+        else:
+            messages = msg
+        
+        response = client.generate_content(messages)
+        # print(response)
+        input_token = response.usage_metadata.prompt_token_count
+        output_token = response.usage_metadata.total_token_count
+        
+        tokens = {
+            'input_tokens': input_token,
+            'output_tokens': output_token
+        }
+        
+        return response.text, tokens
 
     @retry_decorator(max_retries=3, delay=1, backoff=2)
     async def call_openai_compatible_async(self, model: str, prompt: str, temperature: float = 0.001, client_type: str = 'openai') -> str:
