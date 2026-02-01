@@ -2,6 +2,9 @@ import sys
 import os
 import google.auth
 
+import logging
+logging.getLogger().setLevel(logging.WARNING)
+
 # Add parent directory to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -38,7 +41,7 @@ def main():
     """
 
     problem_description = """
-    Gold Investment Dilemma: You have exactly ₹1 lakh to spend on gold jewelry from three options with specific constraints. 
+    Gold Investment Dilemma(Chennai Tamil Nadu India): You have exactly ₹1 lakh to spend on gold jewelry from three options with specific constraints. 
     A necklace must be at least 32 grams with no upper limit—you can go heavier if budget allows, and you'll wear one piece at a time. 
     Bangles range from 32-40 grams, offering flexibility to add more weight within that band. Rings present a unique challenge: each ring must weigh 2-8 grams, 
     but you need to buy two identical rings (one for each ear—likely earrings, not finger rings), meaning your actual purchase is 4-16 grams total in a matching pair. 
@@ -55,8 +58,8 @@ def main():
     # designer_service = ModelService(model="gpt-4.1")
     # executor_service = ModelService(model="phi-4")
 
-    designer_service = ModelService(model="gemini-2.5-pro")
-    executor_service = ModelService(model="gemini-2.5-pro")
+    designer_service = ModelService(model="gemini-2.5-flash")
+    executor_service = ModelService(model="gemini-2.5-flash")
 
     # Alternative: Use local models
     # designer_service = ModelService.local()

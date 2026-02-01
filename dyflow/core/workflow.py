@@ -7,9 +7,7 @@ from .state import State
 from .operator import InstructExecutorOperator, Operator
 from ..model_service.model_service import ModelService
 
-
-
-# Define the design prompt template
+# Define the design prompt template - Use TOOLS when external data or calculations are needed
 DESIGN_STAGE_PROMPT = """
 You are the workflow stage designer. Analyze the current execution state and design the next stage dynamically.
 
@@ -23,6 +21,7 @@ Current Execution Summary:
 
 Strategy Selection Guidelines:
 - Assess problem complexity in the first stage and choose an appropriate initial strategy
+- Use TOOLS when external data or calculations are needed
 - Adapt strategy based on execution results
 - Prefer diverse strategies: if review failed, try DECOMPOSE or ENSEMBLE instead
 

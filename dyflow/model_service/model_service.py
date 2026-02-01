@@ -76,7 +76,7 @@ class ModelService:
     @classmethod
     def google(cls, temperature: float = 0.01) -> 'ModelService':
         """Create a ModelService instance with Gemini"""
-        return cls(model='gemini-2.5-pro', temperature=temperature)
+        return cls(model='gemini-2.5-flash', temperature=temperature)
     
     @classmethod
     def claude(cls, temperature: float = 0.01) -> 'ModelService':

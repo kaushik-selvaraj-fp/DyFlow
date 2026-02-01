@@ -31,7 +31,7 @@ PRICE_INFO = {
     'qwen3-14B': {'input': 0.07, 'output': 0.24},
     'qwen3-235B-A22B': {'input': 0.2, 'output': 0.6},
     'gpt-3.5-turbo': {'input': 0.5, 'output': 1.5},
-    'gemini-2.5-pro': {'input': 1.00, 'output': 3.00},
+    'gemini-2.5-flash': {'input': 1.00, 'output': 3.00},
 }
 
 def calculate_price(model: str, input_tokens: int, output_tokens: int) -> float:
